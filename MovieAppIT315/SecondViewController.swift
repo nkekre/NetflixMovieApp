@@ -20,14 +20,12 @@ class SecondViewController: UIViewController {
     @IBOutlet weak var lblCast: UILabel!
     @IBOutlet weak var lblPercentage: UILabel!
     @IBOutlet weak var imgMovie: UIImageView!
-    
     @IBOutlet weak var likeBtn: UIButton!
-    
-    
-    
     
     var siteSelected = "https://www.netflix.com"
     var movieReelSound:AVAudioPlayer!
+    var movieName:String!
+    var likedMovies = [String]()
     
     @IBAction func backBtn(_ sender: Any) {
         //print("Back button pressed")
@@ -281,14 +279,10 @@ class SecondViewController: UIViewController {
             let img = UIImage(named:randomCom!.image)
             imgMovie.image = img
             siteSelected = randomCom!.trailerURL
+            likeBtn.tag = 0
             
-            let fav = UserDefaults.standard.string(forKey: "liked")
-            if(randomCom!.name == fav){
-                likeBtn.tag = 1
-            }
-            else {
-                likeBtn.tag = 0
-            }
+            movieName = randomCom!.name
+            
         }
         else if(global.selectedOption == "Horror"){
             populateHorror()
@@ -306,13 +300,8 @@ class SecondViewController: UIViewController {
             imgMovie.image = img
             siteSelected = randomHor!.trailerURL
             
-            let fav = UserDefaults.standard.string(forKey: "liked")
-            if(lblTitle.text == fav){
-                likeBtn.tag = 1
-            }
-            else {
-                likeBtn.tag = 0
-            }
+            movieName = randomHor!.name
+            
         }
         else if(global.selectedOption == "Romance"){
             populateRomance()
@@ -330,13 +319,8 @@ class SecondViewController: UIViewController {
             imgMovie.image = img
             siteSelected = randomRom!.trailerURL
             
-            let fav1 = UserDefaults.standard.string(forKey: "liked")
-            if(lblTitle.text == fav1){
-                likeBtn.tag = 1
-            }
-            else {
-                likeBtn.tag = 0
-            }
+              movieName = randomRom!.name
+            
         }
         else if(global.selectedOption == "Action"){
             populateAction()
@@ -354,13 +338,8 @@ class SecondViewController: UIViewController {
             imgMovie.image = img
             siteSelected = randomAct!.trailerURL
             
-            let fav2 = UserDefaults.standard.string(forKey: "liked")
-            if(lblTitle.text == fav2){
-                likeBtn.tag = 1
-            }
-            else {
-                likeBtn.tag = 0
-            }
+            movieName = randomAct!.name
+            
         }
         else {
             populateAction()
@@ -381,19 +360,20 @@ class SecondViewController: UIViewController {
             imgMovie.image = img
             siteSelected = randomMov!.trailerURL
             
-            let fav3 = UserDefaults.standard.string(forKey: "liked")
-            if(lblTitle.text == fav3){
-                likeBtn.tag = 1
-            }
-            else {
-                likeBtn.tag = 0
-            }
+            movieName = randomMov!.name
+            
         }
         movieReelSound.play()
     }
     
     @IBAction func btnShowNxt(_ sender: Any) {
         showMeMovies()
+        if(likedMovies.contains(movieName)){
+            likeBtn.setImage(UIImage(named: "filled_heart"), for: .normal)
+        }
+        else {
+            likeBtn.setImage(UIImage(named: "empty_heart"), for: .normal)
+        }
     }
     
     @IBAction func btnViewTrailer(_ sender: Any) {
@@ -427,15 +407,21 @@ class SecondViewController: UIViewController {
         showMeMovies()
     }
     
-    @IBAction func likeBtnClicked(_ sender: Any) {
+    
+    @IBAction func likeBtnClicked(_ sender: UIButton) {
+        var i = 0
         if(likeBtn.tag == 0){
             likeBtn.setImage(UIImage(named: "filled_heart"), for: .normal)
-            UserDefaults.standard.set(lblTitle.text, forKey:"liked")
             likeBtn.tag = 1
+            UserDefaults.standard.set(lblTitle.text, forKey:"liked")
+            let likedMov = UserDefaults.standard.string(forKey: "liked")
+            likedMovies.append(likedMov!)
+            i = likedMovies.firstIndex(of: likedMov!)!
         }
         else {
             likeBtn.setImage(UIImage(named: "empty_heart"), for: .normal)
             likeBtn.tag = 0
+            likedMovies.remove(at: i)
         }
     }
     
