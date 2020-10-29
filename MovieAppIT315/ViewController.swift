@@ -41,7 +41,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         genreTextField.inputView = genrePickerView
-        genreTextField.placeholder = "Select a genre"
+        //genreTextField.placeholder = "Select a genre"
+        genreTextField.attributedPlaceholder = NSAttributedString(string: "Select a genre",
+        attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         genreTextField.textAlignment = .center
         genrePickerView.delegate = self
         genrePickerView.dataSource = self
